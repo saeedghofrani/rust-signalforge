@@ -1,6 +1,6 @@
 # rust-signalforge
 
-`rust-signalforge` is a recruiter-facing Rust showcase API. It combines two ideas:
+`rust-signalforge` is a small Rust/Axum API for evaluating supplied engineering evidence and service-health samples. It combines two demonstrations:
 
 - **SignalForge:** turns project evidence into a recruiter-readable engineering signal report.
 - **CargoPulse:** evaluates service health checks, latency, and critical failures.
@@ -9,7 +9,7 @@ The app is intentionally small, but it is built like a real backend service: typ
 
 ## Why This Exists
 
-Recruiters and engineering managers often need fast proof that a candidate can build reliable backend software. This project gives them a concrete Rust example that demonstrates:
+The project explores how to keep HTTP transport separate from deterministic application logic. Its small scope makes these choices easy to inspect:
 
 - Async API development with Axum and Tokio.
 - Strong typing with Serde request/response models.
@@ -76,19 +76,14 @@ Example pulse request:
 }
 ```
 
-## What To Tell Recruiters
+## Design and limitations
 
-"I built `rust-signalforge` as a compact Rust backend that shows how I think about reliable services. It has async HTTP routes with Axum and Tokio, typed models with Serde, pure scoring logic that is easy to test, health endpoints for deployment, and integration tests around the API. The project is intentionally small, but the structure mirrors how I would build production services: clear boundaries, observable runtime behavior, and documentation that explains trade-offs."
-
-## Rust vs Node.js vs NestJS
-
-**Rust** gives compile-time memory safety, predictable performance, and strong type guarantees without a garbage collector. It is excellent when reliability, latency, concurrency, and resource usage matter. The trade-off is a steeper learning curve and slower initial development for simple CRUD apps.
-
-**Node.js** is fast to ship, has a huge ecosystem, and is very productive for I/O-heavy APIs. It uses JavaScript or TypeScript on a single-threaded event loop model. It is easier to start with, but runtime errors and dependency sprawl can become risks if the project is not disciplined.
-
-**NestJS** is a structured framework on top of Node.js. It gives modules, controllers, providers, dependency injection, guards, pipes, and decorators. It feels closer to Angular or enterprise backend frameworks. NestJS is great for team consistency and large TypeScript APIs, while Rust is stronger when low-level control, performance, and compile-time guarantees matter more.
-
-The short version: **Node.js is quick and flexible, NestJS is structured TypeScript backend development, and Rust is for highly reliable, high-performance systems where correctness matters before runtime.**
+- Axum handlers accept typed Serde payloads; scoring logic is separate from routing so domain and HTTP behavior can be tested independently.
+- Tokio provides the async runtime; structured tracing gives requests an operational trail.
+- The health-evaluation endpoints score **supplied samples**. They do not poll external services or establish real uptime.
+- Engineering scores are demonstration heuristics, not an automated hiring assessment or proof of professional experience.
+- This is a learning project, not evidence of production Rust ownership. It does not demonstrate durable persistence, authentication, or production load behavior.
+- Deployment readiness still depends on environment-specific monitoring, access controls, and operational validation.
 
 ## Verification
 
